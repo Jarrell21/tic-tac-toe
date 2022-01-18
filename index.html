@@ -8,5 +8,27 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <header>Tic Tac Toe</header>
+    <main>
+      <div id="mode">
+        <button id="mode-x" class="active">X</button>
+        <button id="mode-o">O</button>
+      </div>
+      <div id="gameBoard">
+        <div class="child" index="0"></div>
+        <div class="child" index="1"></div>
+        <div class="child" index="2"></div>
+        <div class="child" index="3"></div>
+        <div class="child" index="4"></div>
+        <div class="child" index="5"></div>
+        <div class="child" index="6"></div>
+        <div class="child" index="7"></div>
+        <div class="child" index="8"></div>
+      </div>
+      <button id="restart-btn">Restart</button>
+      <div id="gameMode-display">Game mode: Player vs Player</div>
+      <button id="change-gameMode">Change game mode</button>
+    </main>
+  </body>
 </html>
