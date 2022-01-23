@@ -4,9 +4,32 @@ const player = () => {
 
 const gameBoard = (()=>{
     let boardArray = new Array(9);
+
+    const getField = (number) => {
+        return boardArray[number];
+    }
     
-    return { boardArray };
+    return { boardArray, getField };
 })();
+
+const gameController = (() => {
+    const gameCheck = () => {
+        if(gameBoard.boardArray[0] === 'X' && 
+            gameBoard.boardArray[1] === 'X' && 
+            gameBoard.boardArray[2] === 'X'){
+            displayController.boxes.forEach(box => {
+                let index = box.getAttribute('index');
+                if(index == '0' || index == '1' || index == '2'){
+                    box.style.backgroundColor = 'aqua';
+                } 
+            })
+            return 'X';
+        }
+    };
+
+    return { gameCheck };
+})();
+
 
 const displayController = (() =>{
     const boxes = document.querySelectorAll('.child');
@@ -14,28 +37,10 @@ const displayController = (() =>{
     const modeOBtn = document.querySelector('#mode-o');
     const restartBtn = document.querySelector('#restart-btn');
 
-    modeXBtn.addEventListener('click', ()=> {
-        if (gameController.getGameMode() === 'PVP') return;
-        modeX();
-        });
-
-    modeOBtn.addEventListener('click', ()=>{
-        if(gameController.getGameMode() === 'PVP') return;
-        modeO();
-    });
-
     boxes.forEach(box => box.addEventListener('click', placeMarker));
     restartBtn.addEventListener('click', clearBoard);
-    renderContent();
 
     let marker = 'X';
-
-    function renderContent(){
-        boxes.forEach(box => {
-            let index = box.getAttribute('index');
-            box.textContent = gameBoard.boardArray[index];
-        })
-    }
     
     function modeX(){
         modeOBtn.classList.remove('active');
@@ -50,42 +55,34 @@ const displayController = (() =>{
     }
     
     function placeMarker(e){
+        if(gameController.gameCheck() === 'X') return;
         if(e.target.textContent !== '') return;
         let index = e.target.getAttribute('index');
         gameBoard.boardArray[index] = marker;
         renderContent();
+        
         if(marker == 'X') modeO();
         else if (marker == 'O') modeX();
     }
 
+    function renderContent(){
+        boxes.forEach(box => {
+            let index = box.getAttribute('index');
+            box.textContent = gameBoard.boardArray[index];
+            box.style.backgroundColor = '';
+        })
+        gameController.gameCheck();
+    }
+
     function clearBoard(){
-        gameBoard.boardArray = [];
+        gameBoard.boardArray = new Array(9);
         renderContent();
         modeX();
     }
+    
+    return { boxes };
 })();
 
 
-const gameController = (() => {
-    let _gameMode = 'PVP';
-
-    const gameChecker = () => {
-        const winnerConditions = [
-            [0, 1, 2], [0, 4, 8], [0, 3, 6],
-            [1, 4, 7], [2, 5, 8], [3, 4, 5],
-            [6, 7, 8], [3, 5, 7]
-        ];
-
-        
-    }
-
-    const setGameMode = (newMode) => {
-        _gameMode = newMode;
-    }
-
-    const getGameMode = () => _gameMode;
-
-    return { getGameMode, setGameMode };
-})();
 
 
