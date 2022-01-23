@@ -23,6 +23,7 @@ const gameController = (() => {
                     box.style.backgroundColor = 'aqua';
                 } 
             })
+            displayController.declareWinner();
             return 'X';
         }
     };
@@ -36,9 +37,13 @@ const displayController = (() =>{
     const modeXBtn = document.querySelector('#mode-x');
     const modeOBtn = document.querySelector('#mode-o');
     const restartBtn = document.querySelector('#restart-btn');
+    const popupContainer = document.querySelector('#popUp-container');
+    const playAgainBtn = document.querySelector('#play-again');
 
+    
     boxes.forEach(box => box.addEventListener('click', placeMarker));
     restartBtn.addEventListener('click', clearBoard);
+    playAgainBtn.addEventListener('click', playAgain);
 
     let marker = 'X';
     
@@ -79,8 +84,17 @@ const displayController = (() =>{
         renderContent();
         modeX();
     }
+
+    function declareWinner(){
+        popupContainer.style.display = 'flex';
+    }
+
+    function playAgain(){
+        clearBoard();
+        popupContainer.style.display = 'none';
+    }
     
-    return { boxes };
+    return { boxes, declareWinner };
 })();
 
 
