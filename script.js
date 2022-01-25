@@ -8,6 +8,7 @@ const gameBoard = (()=>{
 // Module that contains the algorithm for checking the game winner
 const gameController = (() => {
 
+    // Function that checks the boardArray for row combinations
     const checkForRows = () => {
         for(let i = 0; i < 7; i=i+3){
             if(gameBoard.boardArray[i] == 'X' &&
@@ -17,13 +18,32 @@ const gameController = (() => {
                     return 'X';
                 }
             else if(gameBoard.boardArray[i] == 'O' &&
-                gameBoard.boardArray[i+1] == 'O' &&
-                gameBoard.boardArray[i+2] == 'O'){
-                    displayController.highlight(i, (i+1),(i+2), 'aqua');
-                    return 'O';
+                    gameBoard.boardArray[i+1] == 'O' &&
+                    gameBoard.boardArray[i+2] == 'O'){
+                        displayController.highlight(i, (i+1),(i+2), 'aqua');
+                        return 'O';
                 }
         }
-        return false;
+        return;
+    };
+
+    // Function that checks the boardArray for column combinations
+    const checkForCols = () => {
+        for(let i = 0; i < 3; i++){
+            if(gameBoard.boardArray[i] == 'X' &&
+                gameBoard.boardArray[i+3] == 'X' &&
+                gameBoard.boardArray[i+6] == 'X'){
+                    displayController.highlight(i, (i+3), (i+6), 'yellow');
+                    return 'X';
+                }
+            else if(gameBoard.boardArray[i] == 'O' &&
+                    gameBoard.boardArray[i+3] == 'O' &&
+                    gameBoard.boardArray[i+6] == 'O'){
+                        displayController.highlight(i, (i+3), (i+6), 'aqua');
+                        return 'O';
+                }
+        }
+        return;
     };
 
     const checkForTie = () => {
@@ -33,7 +53,7 @@ const gameController = (() => {
         return true;
     };
 
-    return { checkForTie, checkForRows };
+    return { checkForTie, checkForRows, checkForCols };
 })();
 
 // Module that controls every display in the page
@@ -110,12 +130,14 @@ const displayController = (() =>{
     // Function that displays the winner of the game in the page
     function declareWinner(){
         if(gameBoard.boardArray.length < 5) return;
-        if(gameController.checkForRows() === 'X'){
+        if(gameController.checkForRows() === 'X' ||
+            gameController.checkForCols() === 'X'){
             winnerP.textContent = 'Player X wins!';
             winnerP.style.backgroundColor = 'yellow';
             winnerContainer.style.display = 'block';
         }
-        else if(gameController.checkForRows() === 'O'){
+        else if(gameController.checkForRows() === 'O' ||
+                gameController.checkForCols() === 'O'){
             winnerP.textContent = 'Player O wins!';
             winnerP.style.backgroundColor = 'aqua';
             winnerContainer.style.display = 'block';
