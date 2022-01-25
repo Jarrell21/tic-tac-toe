@@ -12,7 +12,7 @@
     <header>Tic Tac Toe</header>
     <main>
       <div id="marker">
-        <div id="marker-x" class="active">X</div>
+        <div id="marker-x" class="active-x">X</div>
         <div id="marker-o">O</div>
       </div>
       <div id="gameBoard">
@@ -26,7 +26,11 @@
         <div class="box" index="7"></div>
         <div class="box" index="8"></div>
       </div>
-      <button id="restart-btn">Restart</button>
+      <button id="restart-btn"><p>Restart</p></button>
+      <div id="winner-container">
+        <p>Game Over!</p>
+        <p id="winner">Player _ Wins</p>
+      </div>
     </main>
   </body>
 </html>

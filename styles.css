@@ -36,7 +36,11 @@ main {
   border-radius: 10px;
 }
 
-.active {
+.active-x {
+  background-color: yellow;
+}
+
+.active-o {
   background-color: aqua;
 }
 
@@ -64,4 +68,24 @@ main {
   border: none;
   cursor: pointer;
   padding: 10px;
+}
+
+#restart-btn > p {
+  transition: transform 0.2s;
+}
+
+#restart-btn > p:hover {
+  transform: scale(1.3);
+  transition: ease-out 0.2s;
+}
+
+#winner-container {
+  display: none;
+  text-align: center;
+  font-size: 1.5em;
+  padding: 10px;
+}
+
+#winner-container > p {
+  padding: 5px;
 }
