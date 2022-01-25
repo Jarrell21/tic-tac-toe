@@ -1,6 +1,6 @@
 // Module that contains the array storage of the game board
 const gameBoard = (()=>{
-    let boardArray = new Array(9);
+    let boardArray = [];
     
     return { boardArray };
 })();
@@ -13,11 +13,13 @@ const gameController = (() => {
             if(gameBoard.boardArray[i] == 'X' &&
                 gameBoard.boardArray[i+1] == 'X' &&
                 gameBoard.boardArray[i+2] == 'X'){
+                    displayController.highlight(i, (i+1),(i+2), 'yellow');
                     return 'X';
                 }
             else if(gameBoard.boardArray[i] == 'O' &&
                 gameBoard.boardArray[i+1] == 'O' &&
                 gameBoard.boardArray[i+2] == 'O'){
+                    displayController.highlight(i, (i+1),(i+2), 'aqua');
                     return 'O';
                 }
         }
@@ -90,13 +92,24 @@ const displayController = (() =>{
     // winner of the game last round
     function clearBoard(){
         winnerContainer.style.display = 'none';
-        gameBoard.boardArray = new Array(9);
+        gameBoard.boardArray = [];
         renderContent();
         modeX();
     }
 
+    // Function that highlights the boxes of the winning combination of the winning player
+    function highlight(num1, num2, num3, color){
+        boxes.forEach(box => {
+            let index = box.getAttribute('index');
+            if(index == num1 || index == num2 || index == num3){
+                box.style.backgroundColor = color;
+            }
+        })
+    }
+
     // Function that displays the winner of the game in the page
     function declareWinner(){
+        if(gameBoard.boardArray.length < 5) return;
         if(gameController.checkForRows() === 'X'){
             winnerP.textContent = 'Player X wins!';
             winnerP.style.backgroundColor = 'yellow';
@@ -113,11 +126,9 @@ const displayController = (() =>{
             winnerP.style.backgroundColor = 'dimgray';
             winnerContainer.style.display = 'block';
         }
-        
-        
     }
-    
-    return { boxes, declareWinner };
+
+    return { highlight };
 })();
 
 
