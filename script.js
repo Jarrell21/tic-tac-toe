@@ -1,7 +1,3 @@
-const player = () => {
-    
-};
-
 // Module that contains the array storage of the game board
 const gameBoard = (()=>{
     let boardArray = new Array(9);
@@ -12,34 +8,30 @@ const gameBoard = (()=>{
 // Module that contains the algorithm for checking the game winner
 const gameController = (() => {
 
-    const gameCheck = () => {
-        checkForTie();
-
-        const rows = [[0,1,2], [3,4,5], [6,7,8]];
-        
-        if(gameBoard.boardArray[0] === 'X' && 
-            gameBoard.boardArray[1] === 'X' && 
-            gameBoard.boardArray[2] === 'X'){
-            
+    const checkForRows = () => {
+        for(let i = 0; i < 7; i=i+3){
+            if(gameBoard.boardArray[i] == 'X' &&
+                gameBoard.boardArray[i+1] == 'X' &&
+                gameBoard.boardArray[i+2] == 'X'){
+                    return 'X';
+                }
+            else if(gameBoard.boardArray[i] == 'O' &&
+                gameBoard.boardArray[i+1] == 'O' &&
+                gameBoard.boardArray[i+2] == 'O'){
+                    return 'O';
+                }
         }
-        else if(gameBoard.boardArray[0] === 'X' && 
-            gameBoard.boardArray[4] === 'X' && 
-            gameBoard.boardArray[8] === 'X'){
-            
-        }
-        
+        return false;
     };
 
     const checkForTie = () => {
         for(let i = 0; i < 9; i++){
-            if(gameBoard.boardArray[i] == null){
-                
-                break;
-            }
+            if(gameBoard.boardArray[i] == undefined) return false;
         }
+        return true;
     };
 
-    return { gameCheck };
+    return { checkForTie, checkForRows };
 })();
 
 // Module that controls every display in the page
@@ -48,25 +40,32 @@ const displayController = (() =>{
     const markerX = document.querySelector('#marker-x');
     const markerO = document.querySelector('#marker-o');
     const restartBtn = document.querySelector('#restart-btn');
+    const winnerContainer = document.querySelector('#winner-container');
+    const winnerP = document.querySelector('#winner');
     
     boxes.forEach(box => box.addEventListener('click', placeMarker));
     restartBtn.addEventListener('click', clearBoard);
 
     let marker = 'X';
     
+    // modeX and modeO are functions that highlights the next-
+    // player's turn
     function modeX(){
-        markerO.classList.remove('active');
-        markerX.classList.add('active');
+        markerO.classList.remove('active-o');
+        markerX.classList.add('active-x');
         marker = 'X';
     }
 
     function modeO(){
-        markerX.classList.remove('active');
-        markerO.classList.add('active');
+        markerX.classList.remove('active-x');
+        markerO.classList.add('active-o');
         marker = 'O';
     }
-    
+
+    // Function that allows the user to put a marker on each box on the-
+    // board when clicked
     function placeMarker(e){
+        if(winnerContainer.style.display === 'block') return;
         if(e.target.textContent !== '') return;
         let index = e.target.getAttribute('index');
         gameBoard.boardArray[index] = marker;
@@ -76,22 +75,49 @@ const displayController = (() =>{
         else if (marker == 'O') modeX();
     }
 
+    // Function that displays each marker on the box from the-
+    // user input
     function renderContent(){
         boxes.forEach(box => {
             let index = box.getAttribute('index');
             box.textContent = gameBoard.boardArray[index];
             box.style.backgroundColor = '';
         })
-        gameController.gameCheck();
+        declareWinner();
     }
 
+    // function that clears the board in the page and hides the-
+    // winner of the game last round
     function clearBoard(){
+        winnerContainer.style.display = 'none';
         gameBoard.boardArray = new Array(9);
         renderContent();
         modeX();
     }
+
+    // Function that displays the winner of the game in the page
+    function declareWinner(){
+        if(gameController.checkForRows() === 'X'){
+            winnerP.textContent = 'Player X wins!';
+            winnerP.style.backgroundColor = 'yellow';
+            winnerContainer.style.display = 'block';
+        }
+        else if(gameController.checkForRows() === 'O'){
+            winnerP.textContent = 'Player O wins!';
+            winnerP.style.backgroundColor = 'aqua';
+            winnerContainer.style.display = 'block';
+        }
+
+        else if(gameController.checkForTie() === true){
+            winnerP.textContent = "It's a TIE!";
+            winnerP.style.backgroundColor = 'dimgray';
+            winnerContainer.style.display = 'block';
+        }
+        
+        
+    }
     
-    return { boxes };
+    return { boxes, declareWinner };
 })();
 
 
